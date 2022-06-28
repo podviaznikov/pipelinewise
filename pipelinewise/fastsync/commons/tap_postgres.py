@@ -473,7 +473,7 @@ class FastSyncTapPostgres:
         split_large_files=False,
         split_file_chunk_size_mb=1000,
         split_file_max_chunks=20,
-        compress=False,
+        compress=True,
     ):
         """
         Export data from table to a zipped csv
@@ -513,4 +513,4 @@ class FastSyncTapPostgres:
         )
 
         with gzip_splitter as split_gzip_files:
-            self.curr.copy_expert(sql, split_gzip_files, size=131072)
+            self.curr.copy_expert(sql, split_gzip_files, size=1310720)
