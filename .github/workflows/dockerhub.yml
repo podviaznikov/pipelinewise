@@ -36,7 +36,7 @@ jobs:
         context: .
         push: true
         tags: |
-          antonwave/pipelinewise:${{ steps.genTag.outputs.replaced }}
+          antonwave/pipelinewise:0.46.0
           antonwave/pipelinewise:latest
           
     - name: Build and push main image with only default connectors
@@ -49,7 +49,7 @@ jobs:
           "connectors=default"
         push: true
         tags: |
-          antonwave/pipelinewise:${{ steps.genTag.outputs.replaced }}-default
+          antonwave/pipelinewise:0.46.0-default
           antonwave/pipelinewise:latest-default
 
     - name: Image digests
