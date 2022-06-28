@@ -37,19 +37,19 @@ jobs:
         context: .
         push: true
         tags: |
-          transferwiseworkspace/pipelinewise:${{ steps.genTag.outputs.replaced }}
-          transferwiseworkspace/pipelinewise:latest
+          antonwave/pipelinewise:${{ steps.genTag.outputs.replaced }}
+          antonwave/pipelinewise:latest
 
-    - name: Build and push barebone image
-      id: docker_build_barebone
-      uses: docker/build-push-action@v2
-      with:
-        file: ./Dockerfile.barebone
-        context: .
-        push: true
-        tags: |
-          transferwiseworkspace/pipelinewise-barebone:${{ steps.genTag.outputs.replaced }}
-          transferwiseworkspace/pipelinewise-barebone:latest
+#     - name: Build and push barebone image
+#       id: docker_build_barebone
+#       uses: docker/build-push-action@v2
+#       with:
+#         file: ./Dockerfile.barebone
+#         context: .
+#         push: true
+#         tags: |
+#           antonwave/pipelinewise-barebone:${{ steps.genTag.outputs.replaced }}
+#           antonwave/pipelinewise-barebone:latest
           
     - name: Build and push main image with only default connectors
       id: docker_build_default
@@ -61,8 +61,8 @@ jobs:
           "connectors=default"
         push: true
         tags: |
-          transferwiseworkspace/pipelinewise:${{ steps.genTag.outputs.replaced }}-default
-          transferwiseworkspace/pipelinewise:latest-default
+          antonwave/pipelinewise:${{ steps.genTag.outputs.replaced }}-default
+          antonwave/pipelinewise:latest-default
 
     - name: Image digests
       run: |
