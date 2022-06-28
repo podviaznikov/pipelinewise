@@ -104,7 +104,6 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         postgres.copy_table(
             table,
             filepath,
-            compress=False, 
             split_large_files=args.target.get('split_large_files'),
             split_file_chunk_size_mb=args.target.get('split_file_chunk_size_mb'),
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
