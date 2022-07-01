@@ -109,20 +109,22 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
         )
         end_time = datetime.now()
-        LOGGER.info('PG copy table: %s', end_time - start_time)
         file_parts = glob.glob(f'{filepath}*')
         size_bytes = sum([os.path.getsize(file_part) for file_part in file_parts])
+        LOGGER.info('PG copy table: %s %s %s', table, end_time - start_time, size_bytes)
         snowflake_types = postgres.map_column_types_to_target(table)
         snowflake_columns = snowflake_types.get('columns', [])
         primary_key = snowflake_types.get('primary_key')
         postgres.close_connection()
 
+        start_time = datetime.now()
         # Uploading to S3
         s3_keys = []
         for file_part in file_parts:
             s3_keys.append(snowflake.upload_to_s3(file_part, tmp_dir=args.temp_dir))
             os.remove(file_part)
-
+        end_time = datetime.now()
+        LOGGER.info('s3 upload: %s %s %s', table, end_time - start_time, size_bytes)
         # Create a pattern that match all file parts by removing multipart suffix
         s3_key_pattern = (
             re.sub(r'\.part\d*$', '', s3_keys[0])
