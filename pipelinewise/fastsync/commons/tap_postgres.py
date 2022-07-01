@@ -509,6 +509,7 @@ class FastSyncTapPostgres:
             mode='wb',
             chunk_size_mb=split_file_chunk_size_mb,
             max_chunks=split_file_max_chunks if split_large_files else 0,
+            est_compr_rate=0.9,
             compress=compress,
         )
 
