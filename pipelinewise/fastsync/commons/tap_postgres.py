@@ -497,7 +497,7 @@ class FastSyncTapPostgres:
 
         schema_name, table_name = table_name.split('.')
         
-        if smallest_primary_key and largest_primary_key:
+        if smallest_primary_key is not None and largest_primary_key is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'
@@ -507,7 +507,7 @@ class FastSyncTapPostgres:
                 ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key, primary_key, largest_primary_key
             )
             LOGGER.info('Exporting data: %s', sql)
-        else if smallest_primary_key:
+        else if smallest_primary_key is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'
@@ -517,7 +517,7 @@ class FastSyncTapPostgres:
                 ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key
             )
             LOGGER.info('Exporting data: %s', sql)
-        else if largest_primary_key:
+        else if largest_primary_key is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'

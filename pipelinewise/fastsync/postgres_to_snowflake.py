@@ -103,6 +103,7 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         snowflake_columns = snowflake_types.get('columns', [])
         primary_key = snowflake_types.get('primary_key')
         start_time = datetime.now()
+        LOGGER.info('PG copy args: %s %s %s %s', table, primary_key, args.target.get('smallest_primary_key', None), args.target.get('largest_primary_key', None))
         # Exporting table data, get table definitions and close connection to avoid timeouts
         postgres.copy_table(
             table,
