@@ -514,4 +514,4 @@ class FastSyncTapPostgres:
         )
 
         with gzip_splitter as split_gzip_files:
-            self.curr.copy_expert(sql, split_gzip_files, size=1310720)
+            self.curr.copy_expert(sql, split_gzip_files, size=131072)
