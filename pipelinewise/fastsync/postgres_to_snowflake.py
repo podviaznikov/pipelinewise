@@ -222,14 +222,7 @@ def main_impl():
     LOGGER.info(
         """
         -------------------------------------------------------
-        SYNC FINISHED - SUMMARY
-        -------------------------------------------------------
-            Total tables selected to sync  : %s
-            Tables loaded successfully     : %s
-            Exceptions during table sync   : %s
-
-            Pool size                      : %s
-            Runtime                        : %s
+        SYNC FINISHED - SUMMARY, Total tables selected to sync  : %s, Tables loaded successfully     : %s, Exceptions during table sync   : %s, Pool size                      : %s, Runtime                        : %s
         -------------------------------------------------------
         """,
         len(args.tables),
