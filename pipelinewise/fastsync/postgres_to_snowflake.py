@@ -99,6 +99,9 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         bookmark = utils.get_bookmark_for_table(
             table, args.properties, postgres, dbname=dbname
         )
+        snowflake_types = postgres.map_column_types_to_target(table)
+        snowflake_columns = snowflake_types.get('columns', [])
+        primary_key = snowflake_types.get('primary_key')
         start_time = datetime.now()
         # Exporting table data, get table definitions and close connection to avoid timeouts
         postgres.copy_table(
@@ -107,14 +110,15 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
             split_large_files=args.target.get('split_large_files'),
             split_file_chunk_size_mb=args.target.get('split_file_chunk_size_mb'),
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
+            primary_key,
+            smallest_primary_key=args.target.get('smallest_primary_key', None),
+            largest_primary_key=args.target.get('largest_primary_key', None),
         )
         end_time = datetime.now()
         file_parts = glob.glob(f'{filepath}*')
         size_bytes = sum([os.path.getsize(file_part) for file_part in file_parts])
         LOGGER.info('PG copy table: %s %s %s', table, end_time - start_time, size_bytes)
-        snowflake_types = postgres.map_column_types_to_target(table)
-        snowflake_columns = snowflake_types.get('columns', [])
-        primary_key = snowflake_types.get('primary_key')
+        
         postgres.close_connection()
 
         start_time = datetime.now()

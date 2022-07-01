@@ -469,11 +469,14 @@ class FastSyncTapPostgres:
         table_name,
         path,
         max_num=None,
+        primary_key,
         date_type='date',
         split_large_files=False,
         split_file_chunk_size_mb=1000,
         split_file_max_chunks=20,
         compress=True,
+        smallest_primary_key=None,
+        largest_primary_key=None,
     ):
         """
         Export data from table to a zipped csv
@@ -493,16 +496,47 @@ class FastSyncTapPostgres:
             raise Exception('{} table not found.'.format(table_name))
 
         schema_name, table_name = table_name.split('.')
-
-        sql = """COPY (SELECT {}
-        ,now() AT TIME ZONE 'UTC'
-        ,now() AT TIME ZONE 'UTC'
-        ,null
-        FROM {}."{}") TO STDOUT with CSV DELIMITER ','
-        """.format(
-            ','.join(column_safe_sql_values), schema_name, table_name
-        )
-        LOGGER.info('Exporting data: %s', sql)
+        
+        if smallest_primary_key and largest_primary_key:
+            sql = """COPY (SELECT {}
+            ,now() AT TIME ZONE 'UTC'
+            ,now() AT TIME ZONE 'UTC'
+            ,null
+            FROM {}."{}" WHERE {} >= {} AND {} <= {}) TO STDOUT with CSV DELIMITER ','
+            """.format(
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key, primary_key, largest_primary_key
+            )
+            LOGGER.info('Exporting data: %s', sql)
+        else if smallest_primary_key:
+            sql = """COPY (SELECT {}
+            ,now() AT TIME ZONE 'UTC'
+            ,now() AT TIME ZONE 'UTC'
+            ,null
+            FROM {}."{}" WHERE {} >= {}) TO STDOUT with CSV DELIMITER ','
+            """.format(
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key
+            )
+            LOGGER.info('Exporting data: %s', sql)
+        else if largest_primary_key:
+            sql = """COPY (SELECT {}
+            ,now() AT TIME ZONE 'UTC'
+            ,now() AT TIME ZONE 'UTC'
+            ,null
+            FROM {}."{}" WHERE {} <= {}) TO STDOUT with CSV DELIMITER ','
+            """.format(
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, largest_primary_key
+            )
+            LOGGER.info('Exporting data: %s', sql)
+        else:
+            sql = """COPY (SELECT {}
+            ,now() AT TIME ZONE 'UTC'
+            ,now() AT TIME ZONE 'UTC'
+            ,null
+            FROM {}."{}") TO STDOUT with CSV DELIMITER ','
+            """.format(
+                ','.join(column_safe_sql_values), schema_name, table_name
+            )
+            LOGGER.info('Exporting data: %s', sql)                            
 
         gzip_splitter = split_gzip.open(
             path,
