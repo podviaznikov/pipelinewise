@@ -189,7 +189,7 @@ def main_impl():
         -------------------------------------------------------
         STARTING SYNC
         -------------------------------------------------------
-        Tables selected to sync        : %s, Total tables selected to sync  : %s, Pool size                      : %s
+        Tables selected to sync: %s, Total tables selected to sync: %s, Pool size: %s
         -------------------------------------------------------
         """,
         args.tables,
@@ -215,7 +215,7 @@ def main_impl():
     LOGGER.info(
         """
         -------------------------------------------------------
-        SYNC FINISHED - SUMMARY, Total tables selected to sync  : %s, Tables loaded successfully     : %s, Exceptions during table sync   : %s, Pool size                      : %s, Runtime                        : %s
+        SYNC FINISHED.Tables selected: %s, Tables loaded: %s, Exceptions: %s, Pool size: %s, Runtime: %s
         -------------------------------------------------------
         """,
         len(args.tables),
