@@ -496,7 +496,7 @@ class FastSyncTapPostgres:
             raise Exception('{} table not found.'.format(table_name))
 
         schema_name, table_name = table_name.split('.')
-        
+
         if start_value is not None and end_value is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
@@ -543,7 +543,7 @@ class FastSyncTapPostgres:
             mode='wb',
             chunk_size_mb=split_file_chunk_size_mb,
             max_chunks=split_file_max_chunks if split_large_files else 0,
-            est_compr_rate=0.9,
+            est_compr_rate=0.8,
             compress=compress,
         )
 

@@ -105,12 +105,13 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         start_time = datetime.now()
         start_value = args.target.get('start_value', None)
         end_value = args.target.get('end_value', None)
-        LOGGER.info('PG copy args: %s %s %s %s', table, primary_key, start_value, end_value)
+        column = primary_key[0]
+        LOGGER.info('PG copy args: %s %s %s %s', table, column, start_value, end_value)
         # Exporting table data, get table definitions and close connection to avoid timeouts
         postgres.copy_table(
             table,
             filepath,
-            column=primary_key[0],
+            column=column,
             split_large_files=args.target.get('split_large_files'),
             split_file_chunk_size_mb=args.target.get('split_file_chunk_size_mb'),
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
