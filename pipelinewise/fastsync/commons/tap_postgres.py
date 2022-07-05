@@ -468,7 +468,7 @@ class FastSyncTapPostgres:
         self,
         table_name,
         path,
-        primary_key,
+        primary_key=None,
         max_num=None,
         date_type='date',
         split_large_files=False,
