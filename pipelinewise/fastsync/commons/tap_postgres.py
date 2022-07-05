@@ -468,7 +468,7 @@ class FastSyncTapPostgres:
         self,
         table_name,
         path,
-        primary_key=None,
+        column=None,
         max_num=None,
         date_type='date',
         split_large_files=False,
@@ -504,7 +504,7 @@ class FastSyncTapPostgres:
             ,null
             FROM {}."{}" WHERE {} >= {} AND {} <= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, start_value, primary_key, end_value
+                ','.join(column_safe_sql_values), schema_name, table_name, column, start_value, column, end_value
             )
             LOGGER.info('Exporting data: %s', sql)
         elif start_value is not None:
@@ -514,7 +514,7 @@ class FastSyncTapPostgres:
             ,null
             FROM {}."{}" WHERE {} >= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, start_value
+                ','.join(column_safe_sql_values), schema_name, table_name, column, start_value
             )
             LOGGER.info('Exporting data: %s', sql)
         elif end_value is not None:
@@ -524,7 +524,7 @@ class FastSyncTapPostgres:
             ,null
             FROM {}."{}" WHERE {} <= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, end_value
+                ','.join(column_safe_sql_values), schema_name, table_name, column, end_value
             )
             LOGGER.info('Exporting data: %s', sql)
         else:
@@ -536,7 +536,7 @@ class FastSyncTapPostgres:
             """.format(
                 ','.join(column_safe_sql_values), schema_name, table_name
             )
-            LOGGER.info('Exporting data: %s', sql)                            
+            LOGGER.info('Exporting data: %s', sql)
 
         gzip_splitter = split_gzip.open(
             path,

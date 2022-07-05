@@ -110,7 +110,7 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         postgres.copy_table(
             table,
             filepath,
-            primary_key=primary_key[0],
+            column=primary_key[0],
             split_large_files=args.target.get('split_large_files'),
             split_file_chunk_size_mb=args.target.get('split_file_chunk_size_mb'),
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
@@ -121,7 +121,7 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         file_parts = glob.glob(f'{filepath}*')
         size_bytes = sum([os.path.getsize(file_part) for file_part in file_parts])
         LOGGER.info('PG copy table: %s %s %s', table, end_time - start_time, size_bytes)
-        
+
         postgres.close_connection()
 
         start_time = datetime.now()
