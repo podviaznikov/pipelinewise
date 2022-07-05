@@ -475,8 +475,8 @@ class FastSyncTapPostgres:
         split_file_chunk_size_mb=1000,
         split_file_max_chunks=20,
         compress=True,
-        smallest_primary_key=None,
-        largest_primary_key=None,
+        start_value=None,
+        end_value=None,
     ):
         """
         Export data from table to a zipped csv
@@ -497,34 +497,34 @@ class FastSyncTapPostgres:
 
         schema_name, table_name = table_name.split('.')
         
-        if smallest_primary_key is not None and largest_primary_key is not None:
+        if start_value is not None and end_value is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'
             ,null
             FROM {}."{}" WHERE {} >= {} AND {} <= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key, primary_key, largest_primary_key
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, start_value, primary_key, end_value
             )
             LOGGER.info('Exporting data: %s', sql)
-        elif smallest_primary_key is not None:
+        elif start_value is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'
             ,null
             FROM {}."{}" WHERE {} >= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, smallest_primary_key
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, start_value
             )
             LOGGER.info('Exporting data: %s', sql)
-        elif largest_primary_key is not None:
+        elif end_value is not None:
             sql = """COPY (SELECT {}
             ,now() AT TIME ZONE 'UTC'
             ,now() AT TIME ZONE 'UTC'
             ,null
             FROM {}."{}" WHERE {} <= {}) TO STDOUT with CSV DELIMITER ','
             """.format(
-                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, largest_primary_key
+                ','.join(column_safe_sql_values), schema_name, table_name, primary_key, end_value
             )
             LOGGER.info('Exporting data: %s', sql)
         else:

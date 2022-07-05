@@ -103,7 +103,7 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         snowflake_columns = snowflake_types.get('columns', [])
         primary_key = snowflake_types.get('primary_key')
         start_time = datetime.now()
-        LOGGER.info('PG copy args: %s %s %s %s', table, primary_key, args.target.get('smallest_primary_key', None), args.target.get('largest_primary_key', None))
+        LOGGER.info('PG copy args: %s %s %s %s', table, primary_key, args.target.get('start_value', None), args.target.get('end_value', None))
         # Exporting table data, get table definitions and close connection to avoid timeouts
         postgres.copy_table(
             table,
@@ -112,8 +112,8 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
             split_large_files=args.target.get('split_large_files'),
             split_file_chunk_size_mb=args.target.get('split_file_chunk_size_mb'),
             split_file_max_chunks=args.target.get('split_file_max_chunks'),
-            smallest_primary_key=args.target.get('smallest_primary_key', None),
-            largest_primary_key=args.target.get('largest_primary_key', None),
+            start_value=args.target.get('start_value', None),
+            end_value=args.target.get('end_value', None),
         )
         end_time = datetime.now()
         file_parts = glob.glob(f'{filepath}*')
