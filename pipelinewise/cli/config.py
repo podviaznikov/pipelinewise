@@ -449,6 +449,7 @@ class Config:
                     ),
                 'validate_records': tap.get('validate_records', False),
                 'add_metadata_columns': tap.get('add_metadata_columns', False),
+                'column': tap.get('column', None),
                 'start_value': tap.get('start_value', None),
                 'end_value': tap.get('end_value', None),
                 'split_large_files': tap.get('split_large_files', False),

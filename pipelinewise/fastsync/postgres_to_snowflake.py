@@ -105,7 +105,7 @@ def sync_table(table: str, args: Namespace) -> Union[bool, str]:
         start_time = datetime.now()
         start_value = args.target.get('start_value', None)
         end_value = args.target.get('end_value', None)
-        column = primary_key[0]
+        column = args.target.get('column', None)
         LOGGER.info('PG copy args: %s %s %s %s', table, column, start_value, end_value)
         # Exporting table data, get table definitions and close connection to avoid timeouts
         postgres.copy_table(
